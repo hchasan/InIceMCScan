@@ -1,0 +1,59 @@
+This document will explain how to dowload, configure, and run a parameter space search for ShelfMC on a computing cluster. 
+These scripts explore the ShelfMC parameter space by varying ATTEN_UP, REFLECT_RATE, ICETHICK, FIRNDEPTH, and STATION_DEPTH for certain rages. 
+The ranges and increments can be found in setup.sh. 
+
+In order to vary STATION_DEPTH, some changes were made to the ShelfMC code. Follow these steps to allow STATION_DEPTH to be an input parameter.
+1.cd to ShelfMC directory
+2.Do $sed -i -e 's/ATDepth/STATION_DEPTH/g' *.cc
+3.Open declaration.hh. Replace line 87 "const double ATDepth = 0.;" with "double STATION_DEPTH;"
+4.In functions.cc go to line 1829. This is the ReadInput() method. Add the lines below to the end of this method. 
+   GetNextNumber(inputfile, number); // new line for station Depth
+   STATION_DEPTH  = (double) atof(number.c_str()); //new line
+5.Do $make clean all
+
+#######Script Descriptions########
+setup.sh -> This script sets up the necessary directories and setup files for all the runs
+scheduler.sh -> This script submits and monitors all jobs. 
+
+
+#######DOWNLOAD########
+1.Download setup.sh and scheduler.sh
+2.Move both files into your ShelfMC directory
+3.Do $chmod u+x setup.sh and $chmod u+x scheduler.sh
+
+######CONFIGURE#######
+1.Open setup.sh
+2.On line 4, modify the job name
+3.On line 6, modify group name
+4.On line 10, specify your ShelfMC directory
+5.On line 13, modify your run name
+6.On line 14, specify the NNU per run
+7.On line 15, specify the starting seed
+8.On line 17, specify the number of processors per node on your cluster
+9.On lines 19-56, edit the input.txt parameters that you want to keep constant for every run
+10.On line 57, specify the location of the LP_gain_manual.txt
+11.On line 126, change walltime depending on total NNU. Remember this wall time will be 20x shorter than a single processor run.
+12.On line 127, change job prefix
+13.On line 129, change the group name if needed 
+14.Save file
+15.Open scheduler.sh
+16.On line 4, specify your ShelfMC directory
+17.On line 5, modify run name. Make sure it is the same runName as you have in setup.sh
+18.On lines 35 and 39, replace cond0091 with your username for the cluster
+19.On line 42, you can pick how many nodes you want to use at any given time. It is set to 6 intially. 
+20.Save file 
+
+#######RUN#######
+1.Do $qsub setup.sh
+2.Wait for setup.sh to finish. This script is creating the setup files for all runs. This may take about an hour.
+3.When setup.sh is done, there should be a new directory in your home directory. Move this directory to your ShelfMC directory.
+4.Do $screen to start a new screen that the scheduler can run on. This is incase you lose connection to the cluster mid run. 
+5.Do $./scheduler.sh to start script. This script automatically submits jobs and lets you see the status of the runs. This will run for several hours.
+5.The scheduler makes a text file of all jobs called jobList.txt in the ShelfMC dir. Make sure to delete jobList.txt before starting a whole new run.
+
+
+######RESULT#######
+1.When Completed, there will be a great amount of data in the run files, about 460GB.  
+2.The run directory is organized in tree, results for particular runs can be found by cd'ing deeper into the tree.
+3.In each run directory, there will be a resulting root file, all the setup files, and a log file for the run.
+ 

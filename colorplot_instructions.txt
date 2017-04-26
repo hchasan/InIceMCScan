@@ -1,0 +1,34 @@
+***Summary of colorplot.sh
+
+Interactive script - to be run after parameter space scan has been performed
+
+Will plot, for a user-selected ShelfMC scan, the effective volume versus any two variables of the user's choice (out of the 5 parameters we vary:
+attenuation length, antenna radius, ice thickness, firn depth, and station depth)
+
+Also will allow user to choose what values to hold the other 3 variables constant at
+Will add together necessary files, create root script for plotting, and execute root script
+
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+***To use colorplot.sh:
+
+On line 6 of colorplot.sh, set $shelfmc to your ShelfMC directory. This directory should hold the parameter space scan directory, and a directory called "outputs". The "outputs" directory may be empty.
+
+Make sure colorplot.sh has execute permission - if not, type 'chmod u+x colorplot.sh'
+
+Run the script by typing './colorplot.sh'
+
+The following instructions will also be provided in the execution of the script.
+- Enter the name of the run as prompted
+- Make your selections for the two variables to plot along the X- and Y- axes. Your options are:
+  A - Attenuation Length
+  R - Antenna Radius
+  I - Ice Thickness
+  F - Firn Thickness
+  S - Station Depth
+- Select values at which to hold the remaining parameters constant. Please select only the numbers allowed as prompted.
+- Exit root
+- Your plot will be in $shelfmc/outputs/[name of scan]
