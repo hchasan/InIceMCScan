@@ -27,14 +27,14 @@ line19='  SimParam->SetBranchAddress("Veff", &z);'
 line20='  int v=0;'
 line21="  for(int k=1; k<=$SIZE; k++){" ##set later for SIZE
 line22='    veff = 0;'
-line23='    for(v; v<(k*20.0); v++){'
+line23='    for(v; v<(k*20.0); v++){'     ##change 20 to number of processors ShelfMC runs were split across
 line24='      SimParam->GetEntry(v);'
 line25='      veff += z;'
 line26='    }'
-line27='    avgs[(k-1)] = (veff/20.0);'
+line27='    avgs[(k-1)] = (veff/20.0);'    ##change 20 to number of processors
 line28='  }'
 line29="  for(int i=0; i<$SIZE; i++){" ##set later for SIZE
-line30='    SimParam->GetEntry((i*20));'
+line30='    SimParam->GetEntry((i*20));'     ##change 20 to number of processors
 line31='    h->Fill(x,y,avgs[i]);'
 line32='  }'
 line33='  gStyle->SetPalette(1,0);'

@@ -15,7 +15,11 @@ Will add together necessary files, create root script for plotting, and execute 
 
 ***To use colorplot.sh:
 
-On line 6 of colorplot.sh, set $shelfmc to your ShelfMC directory. This directory should hold the parameter space scan directory, and a directory called "outputs". The "outputs" directory may be empty.
+- On line 6 of colorplot.sh, set $shelfmc to your ShelfMC directory. This directory should hold the parameter space scan directory, and a directory called "outputs". The "outputs" directory may be empty.
+
+- On lines 23, 27, and 30 of colorplot.sh, change 20 to the number of processors your ShelfMC runs were split across ($ppn in setup.sh)
+
+
 
 Make sure colorplot.sh has execute permission - if not, type 'chmod u+x colorplot.sh'
 
