@@ -1,23 +1,44 @@
-***Summary of colorplot.sh
+------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------
+***Summary/Instructions for colorplot.sh (followed by same for colorplot_loop.sh)
+------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------
 
-Interactive script - to be run after parameter space scan has been performed
 
-Will plot, for a user-selected ShelfMC scan, the effective volume versus any two variables of the user's choice (out of the 5 parameters we vary:
-attenuation length, antenna radius, ice thickness, firn depth, and station depth)
+------------------------------------------------------------------------------------------------------------
+  ______         __                        __         __
+ /  ___/  _____ |  | _____  __ ___ __ ___ |  | _____ |  |__
+|  /     /  _  \|  |/  _  \|  `__/|  `_  \|  |/  _  \|   _/
+|  \____|  (_)  |  |  (_)  |  |   |  |_)  |  |  (_)  |  |__
+ \______|\_____/|__|\_____/|__|   |  .___/|__|\_____/ \____\
+                                  |__|
+------------------------------------------------------------------------------------------------------------
+
+Interactive script - to be run after parameter space scan has been performed. Produces a single plot.
+
+
+Will plot, for a user-selected ShelfMC scan, the effective volume versus any two variables of the user's
+choice out of the 5 parameters we vary:
+   attenuation length, antenna radius, ice thickness, firn depth, and station depth
+
 
 Also will allow user to choose what values to hold the other 3 variables constant at
+
 Will add together necessary files, create root script for plotting, and execute root script
 
 
-------------------------------------------------------------------------------------------------------------------------------------------------------------
-
+------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------
 
 
 ***To use colorplot.sh:
 
-- On line 6 of colorplot.sh, set $shelfmc to your ShelfMC directory. This directory should hold the parameter space scan directory, and a directory called "outputs". The "outputs" directory may be empty.
+- On line 6 of colorplot.sh, set $shelfmc to your ShelfMC directory. This directory should hold the
+  parameter space scan directory, and a directory called "outputs". The "outputs" directory may be empty.
 
-- On lines 23, 27, and 30 of colorplot.sh, change 20 to the number of processors your ShelfMC runs were split across ($ppn in setup.sh)
+- On lines 23, 27, and 30 of colorplot.sh, change 20 to the number of processors your ShelfMC runs were
+  split across ($ppn in setup.sh)
 
 
 
@@ -33,6 +54,111 @@ The following instructions will also be provided in the execution of the script.
   I - Ice Thickness
   F - Firn Thickness
   S - Station Depth
-- Select values at which to hold the remaining parameters constant. Please select only the numbers allowed as prompted.
-- Exit root
-- Your plot will be in $shelfmc/outputs/[name of scan]
+*****Please only use capital letters in your selection
+- Select values at which to hold the remaining parameters constant. Please select only the numbers allowed
+  as prompted.
+- Your plot will be in the $shelfmc/outputs/[name of scan]_[x variable]_[y variable] directory
+
+
+If you wish to keep the root file and/or the plotting script, comment out line 488 and/or line 489
+accordingly in colorplot.sh
+
+
+
+------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------
+
+  ______         __                        __         __             __
+ /  ___/  _____ |  | _____  __ ___ __ ___ |  | _____ |  |__         |  | _____   _____  __ ___
+|  /     /  _  \|  |/  _  \|  `__/|  `_  \|  |/  _  \|   _/         |  |/  _  \ /  _  \|  `_  \
+|  \____|  (_)  |  |  (_)  |  |   |  |_)  |  |  (_)  |  |__         |  |  (_)  |  (_)  |  |_)  |
+ \______|\_____/|__|\_____/|__|   |  .___/|__|\_____/ \____\ ______ |__|\_____/ \_____/|  .___/
+                                  |__|                                                 |__|
+------------------------------------------------------------------------------------------------------------
+
+Interactive script to be run after the parameter space scan has been performed. Produces multiple plots.
+
+
+Like colorplot.sh, colorplot_loop.sh will prompt the user for two variables against which to plot the
+effective volume, from the options:
+   attenuation length, antenna radius, ice thickness, firn depth, and station depth
+
+
+Unlike colorplot.sh, colorplot_loop.sh does not prompt for constant values of the remaining three variables,
+but instead loops over all combinations of constants to produce many plots with the selected X- and Y- axes
+
+
+Before using this script, please ensure that you have space for hundreds of files (some clusters may have a
+file limit for each user - for instance, Ruby has a 1 million file limit per user).
+The script will delete all files except the .pdf plots, but there will at some point be a few hundred new
+files in your system.
+
+
+------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------
+
+
+***To use colorplot_loop.sh:
+
+- On line 6 of colorplot.sh, set $shelfmc to your ShelfMC directory. This directory should hold the
+  parameter space scan directory, and a directory called "outputs". The "outputs" directory may be empty.
+
+- On lines 23, 27, and 30 of colorplot.sh, change 20 to the number of processors your ShelfMC runs were
+  split across ($ppn in setup.sh)
+
+
+
+Make sure colorplot_loop.sh has execute permission - if not, type 'chmod u+x colorplot_loop.sh'
+
+Run the script by typing './colorplot_loop.sh'
+
+The following instructions will also be provided in the execution of the script.
+- Enter the name of the run as prompted
+- Make your selections for the two variables to plot along the X- and Y- axes. Your options are:
+  A - Attenuation Length
+  R - Antenna Radius
+  I - Ice Thickness
+  F - Firn Thickness
+  S - Station Depth
+*****Please only use capital letters in your selection
+- Your plots will be in the $shelfmc/outputs/[name of scan]_[x variable]_[y variable] directory
+
+
+If you wish to keep the collected root files and/or plotting scripts, comment out line 1014
+and/or line 1015 accordingly in colorplot_loop.sh
+
+
+
+
+------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------
+
+                                                    __ -- __
+                                                _-`         --_
+                                              /             ___\
+                                            /         -```-``   \
+                                           /        /   /..\     -_ 
+                                           |        |   \``/       --__      
+                                           |         \                  - ____
+                                           |          |_-``--___       o |    --_
+                                            |           ``--____``--__   |       \
+                                             \              -`` ``--__`-- \       |
+                                               \             ``-_     \     \     |   
+                                                 \                `_    --___ \  /
+                                                  |                  \.        |/
+                                            -_    |                    \
+                                               -_/                      \
+                                                                         \
+                                                                          )
+                                                                          )
+                                                                          )
+                                                                          |
+                                                                         /
+                                                                        /
+                                                                      /
+                                                                    /
+                                                                 -` 
+                                                                
