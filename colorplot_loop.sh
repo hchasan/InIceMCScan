@@ -443,7 +443,7 @@ elif ([ "$xvar" = "I" ] && [ "$yvar" = "F" ]) || ([ "$yvar" = "I" ] && [ "$xvar"
     echo 'Collecting files...'
     echo
 
-    for const1 in {500..1000.100}
+    for const1 in {500..1000..100}
     do
 	cd Atten_Up$const1/
 	for const2 in {3..31..7}

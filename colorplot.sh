@@ -453,7 +453,7 @@ fi
 
 let "SIZE=$xbins*$ybins"
 
-        all changing lines below:
+       # all changing lines below:
 line2='  TFile *f = new TFile("'"Veff_${xvar}_${yvar}.root"'");'
 line10='  TH2F *h = new TH2F("h", "''V_{eff} vs '"$var1 vs $var2"'"'",$xbins,$xmin,$xmax"', '"$ybins,$ymin,$ymax);"
 line16="  double avgs[$SIZE];"
