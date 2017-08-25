@@ -80,7 +80,6 @@ echo
 echo 'This script will allow you to choose two variables to plot effective volume against.'
 echo
 echo 'Enter the name of the run you wish to plot data for.'
-   echo '***IMPORTANT*** please ensure there is no existing directory of this name in the "outputs" directory!'
 echo
 read -p 'Name of run: ' runName
 echo
@@ -190,7 +189,7 @@ elif ([ "$xvar" = "A" ] && [ "$yvar" = "F" ]) || ([ "$yvar" = "A" ] && [ "$xvar"
     echo
     for L in {500..1000..100}
     do
-	cd Atten_Up$L/AntennaRadius$const1/Icethick$const2
+	cd Atten_Up$L/AntennaRadius$const1/IceThick$const2
 	for FT in {60..140..20}
 	do
 	    cd FirnThick$FT/StationDepth$const3

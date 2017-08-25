@@ -231,7 +231,7 @@ elif ([ "$xvar" = "A" ] && [ "$yvar" = "F" ]) || ([ "$yvar" = "A" ] && [ "$xvar"
 	    cd AntennaRadius$const1
 	    for const2 in {500..2900..400}
 	    do
-		cd Icethick$const2
+		cd IceThick$const2
 		for FT in {60..140..20}
 		do
 		    cd FirnThick$FT/
@@ -270,7 +270,7 @@ elif ([ "$xvar" = "A" ] && [ "$yvar" = "S" ]) || ([ "$yvar" = "A" ] && [ "$xvar"
     for L in {500..1000..100}
     do
 	cd Atten_Up$L
-	for const1 in {500..1000..100}
+	for const1 in {3..31..7}
 	do
 	    cd AntennaRadius$const1
 	    for const2 in {500..2900..400}
@@ -648,8 +648,8 @@ line57='  sprintf(const_3, "'"$const3br"' %d m", const3);'
 
 cd $shelfmc/outputs/${runName}_${xvar}_${yvar}
 
-if ([ "$xvar" = "A" ] && [ "$yvar" = "R" ]) || ([ "$yvar" = "A" ] && [ "$xvar" = "R" ]); then
 #################################################################################################
+if ([ "$xvar" = "A" ] && [ "$yvar" = "R" ]) || ([ "$yvar" = "A" ] && [ "$xvar" = "R" ]); then
 for const1 in {500..2900..400}
 do
     for const2 in {60..140..20}
@@ -786,7 +786,7 @@ for const1 in {3..31..7}
 do
     for const2 in {500..2900..400}
     do
-        for const3 in {0..140..20}
+        for const3 in {60..140..20}
         do
             root -b -l -q Veff_${xvar}_${yvar}_R${const1}_I${const2}_F${const3}.C
         done
@@ -856,7 +856,7 @@ rm *Result*
 
 for const1 in {500..1000..100}
 do
-    for const2 in {60..140..20}
+    for const2 in {500..2900..400}
     do
         for const3 in {0..200..50}
         do
@@ -892,7 +892,7 @@ rm *Result*
 
 for const1 in {500..1000..100}
 do
-    for const2 in {60..140..20}
+    for const2 in {500..2900..400}
     do
         for const3 in {60..140..20}
         do
