@@ -3,7 +3,27 @@
 # script will collect root files and plot as dictated by user
 #Hannah Hasan
 
-shelfmc=$HOME/InIceMCScan ##set to your ShelfMC directory - should have the parameter space scan directory and a directory called "outputs". outputs may be empty
+shelfmc=$HOME/ShelfMC/git_shelfmc ##set to your ShelfMC directory - should have the parameter space scan directory and a directory called "outputs". outputs may be empty
+
+AttenMin=500
+AttenMax=1000
+AttenInc=100
+
+RadiusMin=3
+RadiusMax=31
+RadiusInc=7
+
+IceMin=500
+IceMax=2900
+IceInc=400
+
+FirnMin=60
+FirnMax=140
+FirnInc=20
+
+StDepthMin=0
+StDepthMax=200
+StDepthInc=50
 
 line1='{'
 line2='  TFile *f = new TFile("'"Veff_${xvar}_${yvar}.root"'");'   #set later
@@ -135,10 +155,10 @@ if ([ "$xvar" = "A" ] && [ "$yvar" = "R" ]) || ([ "$yvar" = "A" ] && [ "$xvar" =
     echo
     echo 'Adding files...'
     echo
-    for L in {500..1000..100}
+    for ((L=$AttenMin;L<=$AttenMax;L+=$AttenInc))
     do
 	cd Atten_Up$L
-	for AR in {3..31..7}
+	for ((AR=$RadiusMin;AR<=$RadiusMax;AR+=$RadiusInc))
 	do
 	    cd AntennaRadius$AR/IceThick$const1/FirnThick$const2/StationDepth$const3
             cp *.root $shelfmc/outputs/${runName}_${xvar}_${yvar}/Result_${L}_${AR}.root
@@ -161,10 +181,10 @@ elif ([ "$xvar" = "A" ] && [ "$yvar" = "I" ]) || ([ "$yvar" = "A" ] && [ "$xvar"
      read const3
     const3br='station_depth'
     echo
-    for L in {500..1000..100}
+    for ((L=$AttenMin;L<=$AttenMax;L+=$AttenInc))
     do
         cd Atten_Up$L/AntennaRadius$const1
-        for Ice in {500..2900..400}
+        for ((Ice=$IceMin;Ice<=$IceMax;Ice+=$IceInc))
         do
             cd IceThick$Ice/FirnThick$const2/StationDepth$const3
             cp *.root $shelfmc/outputs/${runName}_${xvar}_${yvar}/Result_${L}_${Ice}.root
@@ -187,10 +207,10 @@ elif ([ "$xvar" = "A" ] && [ "$yvar" = "F" ]) || ([ "$yvar" = "A" ] && [ "$xvar"
      read const3
     const3br='station_depth'
     echo
-    for L in {500..1000..100}
+    for ((L=$AttenMin;L<=$AttenMax;L+=$AttenInc))
     do
 	cd Atten_Up$L/AntennaRadius$const1/IceThick$const2
-	for FT in {60..140..20}
+	for ((FT=$FirnMin;FT<=$FirnMax;FT+=$FirnInc))
 	do
 	    cd FirnThick$FT/StationDepth$const3
 	    cp *.root $shelfmc/outputs/${runName}_${xvar}_${yvar}/Result_${L}_${FT}.root
@@ -213,10 +233,10 @@ elif ([ "$xvar" = "A" ] && [ "$yvar" = "S" ]) || ([ "$yvar" = "A" ] && [ "$xvar"
      read const3
     const3br='firndepth'
     echo
-    for L in {500..1000..100}
+    for ((L=$AttenMin;L<=$AttenMax;L+=$AttenInc))
     do
 	cd Atten_Up$L/AntennaRadius$const1/IceThick$const2/FirnThick$const3
-	for SD in {0..200..50}
+	for ((SD=$StDepthMin;SD<=$StDepthMax;SD+=$StDepthInc))
 	do
 	    cd StationDepth$SD
 	    cp *.root $shelfmc/outputs/${runName}_${xvar}_${yvar}/Result_${L}_${SD}.root
@@ -239,10 +259,10 @@ elif ([ "$xvar" = "R" ] && [ "$yvar" = "I" ]) || ([ "$yvar" = "R" ] && [ "$xvar"
      read const3
     const3br='station_depth'
     echo
-    for AR in {3..31..7}
+    for ((AR=$RadiusMin;AR<=$RadiusMax;AR+=$RadiusInc))
     do
 	cd Atten_Up$const1/AntennaRadius$AR
-	for Ice in {500..2900..400}
+	for ((Ice=$IceMin;Ice<=$IceMax;Ice+=$IceInc))
 	do
 	    cd IceThick$Ice/FirnThick$const2/StationDepth$const3
             cp *.root $shelfmc/outputs/${runName}_${xvar}_${yvar}/Result_${AR}_${Ice}.root
@@ -265,10 +285,10 @@ elif ([ "$xvar" = "R" ] && [ "$yvar" = "F" ]) || ([ "$yvar" = "R" ] && [ "$xvar"
      read const3
     const3br='station_depth'
     echo
-    for AR in {3..31..7}
+    for ((AR=$RadiusMin;AR<=$RadiusMax;AR+=$RadiusInc))
     do
 	cd Atten_Up$const1/AntennaRadius$AR/IceThick$const2
-	for FT in {60..140..20}
+	for ((FT=$FirnMin;FT<=$FirnMax;FT+=$FirnInc))
 	do
 	    cd FirnThick$FT/StationDepth$const3
             cp *.root $shelfmc/outputs/${runName}_${xvar}_${yvar}/Result_${AR}_${FT}.root
@@ -291,10 +311,10 @@ elif ([ "$xvar" = "R" ] && [ "$yvar" = "S" ]) || ([ "$yvar" = "R" ] && [ "$xvar"
      read const3
     const3br='firndepth'
     echo
-    for AR in {3..31..7}
+    for ((AR=$RadiusMin;AR<=$RadiusMax;AR+=$RadiusInc))
     do
 	cd Atten_Up$const1/AntennaRadius$AR/IceThick$const2/FirnThick$const3
-	for SD in {0..200..50}
+	for ((SD=$StDepthMin;SD<=$StDepthMax;SD+=$StDepthInc))
 	do
 	    cd StationDepth$SD
             cp *.root $shelfmc/outputs/${runName}_${xvar}_${yvar}/Result_${AR}_${SD}.root
@@ -317,10 +337,10 @@ elif ([ "$xvar" = "I" ] && [ "$yvar" = "F" ]) || ([ "$yvar" = "I" ] && [ "$xvar"
      read const3
     const3br='station_depth'
     echo
-    for Ice in {500..2900..400}
+    for ((Ice=$IceMin;Ice<=$IceMax;Ice+=$IceInc))
     do
 	cd Atten_Up$const1/AntennaRadius$const2/IceThick$Ice
-	for FT in {60..140..20}
+	for ((FT=$FirnMin;FT<=$FirnMax;FT+=$FirnInc))
 	do
 	    cd FirnThick$FT/StationDepth$const3
             cp *.root $shelfmc/outputs/${runName}_${xvar}_${yvar}/Result_${Ice}_${FT}.root
@@ -343,10 +363,10 @@ elif ([ "$xvar" = "I" ] && [ "$yvar" = "S" ]) || ([ "$yvar" = "I" ] && [ "$xvar"
      read const3
     const3br='firndepth'
     echo
-    for Ice in {500..2900..400}
+    for ((Ice=$IceMin;Ice<=$IceMax;Ice+=$IceInc))
     do
 	cd Atten_Up$const1/AntennaRadius$const2/IceThick$Ice/FirnThick$const3
-	for SD in {0..200..50}
+	for ((SD=$StDepthMin;SD<=$StDepthMax;SD+=$StDepthInc))
 	do
 	    cd StationDepth$SD
             cp *.root $shelfmc/outputs/${runName}_${xvar}_${yvar}/Result_${Ice}_${SD}.root
@@ -369,10 +389,10 @@ elif ([ "$xvar" = "F" ] && [ "$yvar" = "S" ]) || ([ "$yvar" = "F" ] && [ "$xvar"
      read const3
     const3br='icethick'
     echo
-    for FT in {60..140..20}
+    for ((FT=$FirnMin;FT<=$FirnMax;FT+=$FirnInc))
     do
 	cd Atten_Up$const1/AntennaRadius$const2/IceThick$const3/FirnThick$FT
-	for SD in {0..200..50}
+	for ((SD=$StDepthMin;SD<=$StDepthMax;SD+=$StDepthInc))
 	do
 	    cd StationDepth$SD
             cp *.root $shelfmc/outputs/${runName}_${xvar}_${yvar}/Result_${FT}_${SD}.root

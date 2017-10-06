@@ -35,8 +35,10 @@ Will add together necessary files, create root script for plotting, and execute 
 - On line 6 of colorplot.sh, set $shelfmc to your ShelfMC directory. This directory should hold the
   parameter space scan directory, and a directory called "outputs". The "outputs" directory may be empty.
 
-- On lines 23, 27, and 30 of colorplot.sh, change 20 to the number of processors your ShelfMC runs were
+- In the variable lines, on line23, line27, and line30, change 20 to the number of processors your ShelfMC runs were
   split across ($ppn in setup.sh)
+
+- Ensure that the parameter values on lines 8-26 match those for the run you wish to plot
 
 
 
@@ -77,6 +79,7 @@ colorplot_loop
                                   |__|                                                 |__|
 ------------------------------------------------------------------------------------------------------------
 
+A more flexible extension of colorplot!
 Interactive script to be run after the parameter space scan has been performed. Produces multiple plots.
 
 
@@ -89,10 +92,10 @@ Unlike colorplot.sh, colorplot_loop.sh does not prompt for constant values of th
 but instead loops over all combinations of constants to produce many plots with the selected X- and Y- axes
 
 
-Before using this script, please ensure that you have space for hundreds of files (some clusters may have a
-file limit for each user - for instance, Ruby has a 1 million file limit per user).
-The script will delete all files except the .pdf plots, but there will at some point be a few hundred new
-files in your system.
+Before using this script, please ensure that you have space for hundreds of thousands of files (some
+clusters may have a file limit for each user - for instance, Ruby has a 1 million file limit per user).
+The script will delete all files except the .pdf plots, but prior to this deletion there could be a few
+hundred thousand new files in your system.
 
 
 ------------------------------------------------------------------------------------------------------------
@@ -103,7 +106,9 @@ files in your system.
 - On line 6 of colorplot.sh, set $shelfmc to your ShelfMC directory. This directory should hold the
   parameter space scan directory, and a directory called "outputs". The "outputs" directory may be empty.
 
-- On lines 23, 27, and 30 of colorplot.sh, change 20 to the number of processors your ShelfMC runs were
+- Ensure that lines 8-26 match lines 15-33 of setup.sh and scheduler.sh for the desired parameter space scan
+
+- On lines 50, 54, and 57, change 20 to the number of processors your ShelfMC runs were
   split across ($ppn in setup.sh)
 
 
@@ -113,7 +118,7 @@ Make sure colorplot_loop.sh has execute permission - if not, type 'chmod u+x col
 OPTIONAL: Since colorplot_loop can take several minutes to run, it may be desirable to do $screen prior to
 executing the script, in case the connection to the host is interrupted.
 
-Run the script by typing './colorplot_loop.sh'
+Run the script by typing ./colorplot_loop.sh
 
 The following instructions will also be provided in the execution of the script.
 - Enter the name of the run as prompted
@@ -124,11 +129,12 @@ The following instructions will also be provided in the execution of the script.
   F - Firn Thickness
   S - Station Depth
 *****Please only use capital letters in your selection
+
 - Your plots will be in the $shelfmc/outputs/[name of scan]_[x variable]_[y variable] directory
 
 
-If you wish to keep the collected root files and/or plotting scripts, comment out line 1014
-and/or line 1015 accordingly in colorplot_loop.sh
+If you wish to keep the collected root files and/or plotting scripts, comment out line 1034
+and/or line 1035 accordingly in colorplot_loop.sh
 
 
 

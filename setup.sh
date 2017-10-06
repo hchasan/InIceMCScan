@@ -5,11 +5,32 @@
 #PBS -j oe
 #PBS -A PCON0003
 #Jude Rajasekera 3/20/17
+#Modified by Hannah Hasan on 09/17/2017
+
 #directories
 WorkDir=$TMPDIR   
 tmpShelfmc=$HOME/ShelfMC/git_shelfmc #set your ShelfMC directory here
 
 
+AttenMin=600                      # MINIMUM attenuation length for the simulation      *****ALL UNITS ARE IN METERS*****
+AttenMax=1000                     # MAXIMUM attenuation length
+AttenInc=400                      # INCREMENT for attenuation length
+
+RadiusMin=3                       # MINIMUM radius
+RadiusMax=31                      # MAXIMUM radius
+RadiusInc=7                       # INCREMENT
+
+IceMin=500                        # etc...
+IceMax=2900
+IceInc=400
+
+FirnMin=60
+FirnMax=120
+FirnInc=60
+
+StDepthMin=0
+StDepthMax=200
+StDepthInc=50
 
 #controlled variables for run
 runName='e18_ParamSpaceScan' #name of run
@@ -66,25 +87,24 @@ cd $runName
 
 initSeed=$seed
 counter=0
-for L in {500..1000..100} #attenuation length 500-1000
+
+for ((L=$AttenMin;L<=$AttenMax;L+=$AttenInc)) #Attenuation length
 do
     mkdir Atten_Up$L
     cd Atten_Up$L
-
-    for AR in {3..31..7} #Antenna spacing 3-31m
+    for ((AR=$RadiusMin;AR<=$RadiusMax;AR+=$RadiusInc)) #Station radius (measured from center of radius to antenna
     do
-        mkdir AntennaRadius$AR
+	mkdir AntennaRadius$AR
         cd AntennaRadius$AR
-
-        for T in {500..2900..400} #Thickness of Ice 500-2900
+	for ((T=$IceMin;T<=$IceMax;T+=$IceInc)) #Ice thickness
         do
             mkdir IceThick$T
             cd IceThick$T
-            for FT in {60..140..20} #Firn Thinckness 60-140
+            for ((FT=$FirnMin;FT<=$FirnMax;FT+=$FirnInc)) #Firn thickness
             do
-                mkdir FirnThick$FT
+		mkdir FirnThick$FT
                 cd FirnThick$FT
-                for SD in {0..200..50} #Station Depth
+		for ((SD=$StDepthMin;SD<=$StDepthMax;SD+=$StDepthInc)) #Station depth
                 do
                     mkdir StationDepth$SD
                     cd StationDepth$SD

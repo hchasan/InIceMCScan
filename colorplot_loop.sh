@@ -3,7 +3,27 @@
 #script will collect root files and plot as dictated by user
 #Hannah Hasan
 
-shelfmc=$HOME/InIceMCScan ##set to your ShelfMC directory - should have the parameter space scan directory and a directory called "outputs". outputs may be empty
+shelfmc=$HOME/ShelfMC/git_shelfmc ##set to your ShelfMC directory - should have the parameter space scan directory and a directory called "outputs". outputs may be empty
+
+AttenMin=500                      # MINIMUM attenuation length for the simulation
+AttenMax=1000                     # MAXIMUM attenuation length
+AttenInc=100                      # INCREMENT for attenuation length
+
+RadiusMin=3                       # MINIMUM radius
+RadiusMax=31                      # MAXIMUM radius
+RadiusInc=7                       # INCREMENT
+
+IceMin=500                        # etc...
+IceMax=2900
+IceInc=400
+
+FirnMin=60
+FirnMax=140
+FirnInc=20
+
+StDepthMin=0
+StDepthMax=200
+StDepthInc=50
 
 line1='{'
 line2='  TFile *f = new TFile("'"Veff_${xvar}_${yvar}_c1${const1}_c2${const2}_c3${const3}.root"'");' ##set later
@@ -105,20 +125,20 @@ mkdir ${runName}_${xvar}_${yvar}
 
 cd $shelfmc/$runName
 
-attenprompt='Select what value at which to hold constant Attenuation Length'
-atteninc=' > Choose only values between 500-1000, at increments of 100: '
+#attenprompt='Select what value at which to hold constant Attenuation Length'
+#atteninc=' > Choose only values between 500-1000, at increments of 100: '
 
-radiusprompt='Select what value at which to hold constant Antenna Radius'
-radiusinc=' > Choose only values between 3-31, at increments of 7: '
+#radiusprompt='Select what value at which to hold constant Antenna Radius'
+#radiusinc=' > Choose only values between 3-31, at increments of 7: '
 
-iceprompt='Select what value at which to hold constant Ice Thickness'
-iceinc=' > Choose only values between 500-2900, at increments of 400: '
+#iceprompt='Select what value at which to hold constant Ice Thickness'
+#iceinc=' > Choose only values between 500-2900, at increments of 400: '
 
-firnprompt='Select what value at which to hold constant Firn Thickness'
-firninc=' > Choose only values between 60-140, at increments of 20: '
+#firnprompt='Select what value at which to hold constant Firn Thickness'
+#firninc=' > Choose only values between 60-140, at increments of 20: '
 
-stprompt='Select what value at which to hold constant Station Depth'
-stinc=' > Choose only values between 0-200, at increments of 50: '
+#stprompt='Select what value at which to hold constant Station Depth'
+#stinc=' > Choose only values between 0-200, at increments of 50: '
 
 if ([ "$xvar" = "A" ] && [ "$yvar" = "R" ]) || ([ "$yvar" = "A" ] && [ "$xvar" = "R" ]); then
 #    echo $iceprompt
@@ -136,22 +156,24 @@ if ([ "$xvar" = "A" ] && [ "$yvar" = "R" ]) || ([ "$yvar" = "A" ] && [ "$xvar" =
     echo
     echo 'Collecting files...'
     echo
-    for L in {500..1000..100}
+    for ((L=$AttenMin;L<=$AttenMax;L+=$AttenInc))
     do
 	cd Atten_Up$L
-	for AR in {3..31..7}
+	for ((AR=$RadiusMin;AR<=$RadiusMax;AR+=$RadiusInc))
 	do
 	    cd AntennaRadius$AR/
-	    for const1 in {500..2900..400}
+	    for ((const1=$IceMin;const1<=$IceMax;const1+=$IceInc))
 	    do
 		cd IceThick$const1/
-		for const2 in {60..140..20}
+		for ((const2=$FirnMin;const2<=$FirnMax;const2+=$FirnInc))
 		do
 		    cd FirnThick$const2/
-	            for const3 in {0..200..50}
+	            for ((const3=$StDepthMin;const3<=$StDepthMax;const3+=$StDepthInc))
 		    do
 			cd StationDepth$const3
 			cp *.root $shelfmc/outputs/${runName}_${xvar}_${yvar}/Result_${L}_${AR}_c1${const1}_c2${const2}_c3${const3}.root
+                        rm *job.o*
+                        rm *multithread*
 			cd ..
 		    done
 		    cd ..
@@ -179,22 +201,24 @@ elif ([ "$xvar" = "A" ] && [ "$yvar" = "I" ]) || ([ "$yvar" = "A" ] && [ "$xvar"
     echo
     echo 'Collecting files...'
     echo
-    for L in {500..1000..100}
+    for ((L=$AttenMin;L<=$AttenMax;L+=$AttenInc))
     do
         cd Atten_Up$L/
-	for const1 in {3..31..7}
+	for ((const1=$RadiusMin;const1<=$RadiusMax;const1+=$RadiusInc))
 	do
 	    cd AntennaRadius$const1
-            for Ice in {500..2900..400}
+            for ((Ice=$IceMin;Ice<=$IceMax;Ice+=$IceInc))
             do
 		cd IceThick$Ice/
-		for const2 in {60..140..20}
+		for ((const2=$FirnMin;const2<=$FirnMax;const2+=$FirnInc))
 		do
 		    cd FirnThick$const2/
-		    for const3 in {0..200..50}
+		    for ((const3=$StDepthMin;const3<=$StDepthMax;const3+=$StDepthInc))
 		    do
 			cd StationDepth$const3
 			cp *.root $shelfmc/outputs/${runName}_${xvar}_${yvar}/Result_${L}_${Ice}_c1${const1}_c2${const2}_c3${const3}.root
+			rm *job.o*
+			rm *multithread*
 			cd ..
 		    done
 		    cd ..
@@ -223,22 +247,24 @@ elif ([ "$xvar" = "A" ] && [ "$yvar" = "F" ]) || ([ "$yvar" = "A" ] && [ "$xvar"
     echo 'Collecting files...'
     echo
 
-    for L in {500..1000..100}
+    for ((L=$AttenMin;L<=$AttenMax;L+=$AttenInc))
     do
 	cd Atten_Up$L/
-	for const1 in {3..31..7}
+	for ((const1=$RadiusMin;const1<=$RadiusMax;const1+=$RadiusInc))
 	do
 	    cd AntennaRadius$const1
-	    for const2 in {500..2900..400}
+	    for ((const2=$IceMin;const2<=$IceMax;const2+=$IceInc))
 	    do
 		cd IceThick$const2
-		for FT in {60..140..20}
+		for ((FT=$FirnMin;FT<=$FirnMax;FT+=$FirnInc))
 		do
 		    cd FirnThick$FT/
-		    for const3 in {0..200..50}
+		    for ((const3=$StDepthMin;const3<=$StDepthMax;const3+=$StDepthInc))
 		    do
 			cd StationDepth$const3
 			cp *.root $shelfmc/outputs/${runName}_${xvar}_${yvar}/Result_${L}_${FT}_c1${const1}_c2${const2}_c3${const3}.root
+                        rm *job.o*
+                        rm *multithread*
 			cd ..
 		    done
 		    cd ..
@@ -267,22 +293,24 @@ elif ([ "$xvar" = "A" ] && [ "$yvar" = "S" ]) || ([ "$yvar" = "A" ] && [ "$xvar"
     echo 'Collecting files...'
     echo
 
-    for L in {500..1000..100}
+    for ((L=$AttenMin;L<=$AttenMax;L+=$AttenInc))
     do
 	cd Atten_Up$L
-	for const1 in {3..31..7}
+	for ((const1=$RadiusMin;const1<=$RadiusMax;const1+=$RadiusInc))
 	do
 	    cd AntennaRadius$const1
-	    for const2 in {500..2900..400}
+	    for ((const2=$IceMin;const2<=$IceMax;const2+=$IceInc))
 	    do
 		cd IceThick$const2/
-		for const3 in {60..140..20}
+		for ((const3=$FirnMin;const3<=$FirnMax;const3+=$FirnInc))
 		do
 		    cd FirnThick$const3
-		    for SD in {0..200..50}
+		    for ((SD=$StDepthMin;SD<=$StDepthMax;SD+=$StDepthInc))
 		    do
 			cd StationDepth$SD
 			cp *.root $shelfmc/outputs/${runName}_${xvar}_${yvar}/Result_${L}_${SD}_c1${const1}_c2${const2}_c3${const3}.root
+		        rm *job.o*
+                        rm *multithread*
 			cd ..
 		    done
 		    cd ..
@@ -311,22 +339,24 @@ elif ([ "$xvar" = "R" ] && [ "$yvar" = "I" ]) || ([ "$yvar" = "R" ] && [ "$xvar"
     echo 'Collecting files...'
     echo
 
-    for const1 in {500..1000..100}
+    for ((const1=$AttenMin;const1<=$AttenMax;const1+=$AttenInc))
     do
 	cd Atten_Up$const1/
-	for AR in {3..31..7}
+	for ((AR=$RadiusMin;AR<=$RadiusMax;AR+=$RadiusInc))
 	do
 	    cd AntennaRadius$AR
-	    for Ice in {500..2900..400}
+	    for ((Ice=$IceMin;Ice<=$IceMax;Ice+=$IceInc))
 	    do
 		cd IceThick$Ice/
-		for const2 in {60..140..20}
+		for ((const2=$FirnMin;const2<=$FirnMax;const2+=$FirnInc))
 		do
 		    cd FirnThick$const2/
-		    for const3 in {0..200..50}
+		    for ((const3=$StDepthMin;const3<=$StDepthMax;const3+=$StDepthInc))
 		    do
 			cd StationDepth$const3
 			cp *.root $shelfmc/outputs/${runName}_${xvar}_${yvar}/Result_${AR}_${Ice}_c1${const1}_c2${const2}_c3${const3}.root
+                        rm *job.o*
+                        rm *multithread*
 			cd ..
 		    done
 		    cd ..
@@ -355,22 +385,24 @@ elif ([ "$xvar" = "R" ] && [ "$yvar" = "F" ]) || ([ "$yvar" = "R" ] && [ "$xvar"
     echo 'Collecting files...'
     echo
 
-    for const1 in {500..1000..100}
+    for ((const1=$AttenMin;const1<=$AttenMax;const1+=$AttenInc))
     do
 	cd Atten_Up$const1
-	for AR in {3..31..7}
+	for ((AR=$RadiusMin;AR<=$RadiusMax;AR+=$RadiusInc))
 	do
 	    cd AntennaRadius$AR
-	    for const2 in {500..2900..400}
+	    for ((const2=$IceMin;const2<=$IceMax;const2+=$IceInc))
 	    do
 		cd IceThick$const2
-		for FT in {60..140..20}
+		for ((FT=$FirnMin;FT<=$FirnMax;FT+=$FirnInc))
 		do
-		    cd FirnThick$FT/
-		    for const3 in {0..200..50}
+		    cd FirnThick$FT
+		    for ((const3=$StDepthMin;const3<=$StDepthMax;const3+=$StDepthInc))
 		    do
 			cd StationDepth$const3
 			cp *.root $shelfmc/outputs/${runName}_${xvar}_${yvar}/Result_${AR}_${FT}_c1${const1}_c2${const2}_c3${const3}.root
+                        rm *job.o*
+                        rm *multithread*
 			cd ..
 		    done
 		    cd ..
@@ -399,22 +431,24 @@ elif ([ "$xvar" = "R" ] && [ "$yvar" = "S" ]) || ([ "$yvar" = "R" ] && [ "$xvar"
     echo 'Collecting files...'
     echo
 
-    for const1 in {500..1000..100}
+    for ((const1=$AttenMin;const1<=$AttenMax;const1+=$AttenInc))
     do
 	cd Atten_Up$const1
-	for AR in {3..31..7}
+	for ((AR=$RadiusMin;AR<=$RadiusMax;AR+=$RadiusInc))
 	do
 	    cd AntennaRadius$AR/
-	    for const2 in {500..2900..400}
+	    for ((const2=$IceMin;const2<=$IceMax;const2+=$IceInc))
 	    do
 		cd IceThick$const2
-		for const3 in {60..140..20}
+		for ((const3=$FirnMin;const3<=$FirnMax;const2+=$FirnInc))
 		do
 		    cd FirnThick$const3
-		    for SD in {0..200..50}
+		    for ((SD=$StDepthMin;SD<=$StDepthMax;SD+=$StDepthInc))
 		    do
 			cd StationDepth$SD
 			cp *.root $shelfmc/outputs/${runName}_${xvar}_${yvar}/Result_${AR}_${SD}_c1${const1}_c2${const2}_c3${const3}.root
+                        rm *job.o*
+                        rm *multithread*
 			cd ..
 		    done
 		    cd ..
@@ -443,22 +477,24 @@ elif ([ "$xvar" = "I" ] && [ "$yvar" = "F" ]) || ([ "$yvar" = "I" ] && [ "$xvar"
     echo 'Collecting files...'
     echo
 
-    for const1 in {500..1000..100}
+    for ((const1=$AttenMin;const1<=$AttenMax;const1+=$AttenInc))
     do
 	cd Atten_Up$const1/
-	for const2 in {3..31..7}
+	for ((const2=$RadiusMin;const2<=$RadiusMax;const2+=$RadiusInc))
 	do
 	    cd AntennaRadius$const2
-	    for Ice in {500..2900..400}
+	    for ((Ice=$IceMin;Ice<=$IceMax;Ice+=$IceInc))
 	    do
 		cd IceThick$Ice
-		for FT in {60..140..20}
+		for ((FT=$FirnMin;FT<=$FirnMax;FT+=$FirnInc))
 		do
 		    cd FirnThick$FT/
-		    for const3 in {0..200..50}
+		    for ((const3=$StDepthMin;const3<=$StDepthMax;const3+=$StDepthInc))
 		    do
 			cd StationDepth$const3
 			cp *.root $shelfmc/outputs/${runName}_${xvar}_${yvar}/Result_${Ice}_${FT}_c1${const1}_c2${const2}_c3${const3}.root
+                        rm *job.o*
+                        rm *multithread*
 			cd ..
 		    done
 		    cd ..
@@ -487,22 +523,24 @@ elif ([ "$xvar" = "I" ] && [ "$yvar" = "S" ]) || ([ "$yvar" = "I" ] && [ "$xvar"
     echo 'Collecting files...'
     echo
 
-    for const1 in {500..1000..100}
+    for ((const1=$AttenMin;const1<=$AttenMax;const1+=$AttenInc))
     do
 	cd Atten_Up$const1
-	for const2 in {3..31..7}
+	for ((const2=$RadiusMin;const2<=$RadiusMax;const2+=$RadiusInc))
 	do
 	    cd AntennaRadius$const2
-	    for Ice in {500..2900..400}
+	    for ((Ice=$IceMin;Ice<=$IceMax;Ice+=$IceInc))
 	    do
 		cd IceThick$Ice/
-		for const3 in {60..140..20}
+		for ((const3=$FirnMin;const3<=$FirnMax;const3+=$FirnInc))
 		do
 		    cd FirnThick$const3
-		    for SD in {0..200..50}
+		    for ((SD=$StDepthMin;SD<=$StDepthMax;SD+=$StDepthInc))
 		    do
 			cd StationDepth$SD
 			cp *.root $shelfmc/outputs/${runName}_${xvar}_${yvar}/Result_${Ice}_${SD}_c1${const1}_c2${const2}_c3${const3}.root
+                        rm *job.o*
+                        rm *multithread*
 			cd ..
 		    done
 		    cd ..
@@ -531,22 +569,24 @@ elif ([ "$xvar" = "F" ] && [ "$yvar" = "S" ]) || ([ "$yvar" = "F" ] && [ "$xvar"
     echo 'Collecting files...'
     echo
 
-    for const1 in {500..1000..100}
+    for ((const1=$AttenMin;const1<=$AttenMax;const1+=$AttenInc))
     do
 	cd Atten_Up$const1
-	for const2 in {3..31..7}
+	for ((const2=$RadiusMin;const2<=$RadiusMax;const2+=$RadiusInc))
 	do
 	    cd AntennaRadius$const2
-	    for const3 in {500..2900..400}
+	    for ((const3=$IceMin;const3<=$IceMax;const3+=$IceInc))
 	    do
 		cd IceThick$const3
-		for FT in {60..140..20}
+		for ((FT=$FirnMin;FT<=$FirnMax;FT+=$FirnInc))
 		do
 		    cd FirnThick$FT
-		    for SD in {0..200..50}
+		    for ((SD=$StDepthMin;SD<=$StDepthMax;SD+=$StDepthInc))
 		    do
 			cd StationDepth$SD
 			cp *.root $shelfmc/outputs/${runName}_${xvar}_${yvar}/Result_${FT}_${SD}_c1${const1}_c2${const2}_c3${const3}.root
+                        rm *job.o*
+                        rm *multithread*
 			cd ..
 		    done
 		    cd ..
@@ -563,66 +603,66 @@ fi
 
 if [ "$xvar" = "A" ]; then
     var1='Attenuation Length'
-    xbins=6
-    xmin=450
-    xmax=1050
+    xbins=$(( ($AttenMax-$AttenMin)/$AttenInc +1 ))
+    xmin=$(echo "scale=2;$AttenMin-($AttenInc/2)" | bc -l)
+    xmax=$(echo "scale=2;$AttenMax+($AttenInc/2)" | bc -l)
     xbranch='atten_up'
 elif [ "$xvar" = "R" ]; then
     var1='Antenna Radius'
-    xbins=5
-    xmin='-0.5'
-    xmax='34.5'
+    xbins=$(( ($RadiusMax-$RadiusMin)/$AttenInc +1 ))
+    xmin=$(echo "scale=2;$RadiusMin-($RadiusInc/2)" | bc -l)
+    xmax=$(echo "scale=2;$RadiusMax+($RadiusInc/2)" | bc -l)
     xbranch='st4_r'
 elif [ "$xvar" = "I" ]; then
     var1='Ice Thickness'
-    xbins=7
-    xmin=300
-    xmax=3100
+    xbins=$(( (IceMax-$IceMin)/$IceInc +1 ))
+    xmin=$(echo "scale=2;$IceMin-($IceInc/2)" | bc -l)
+    xmax=$(echo "scale=2;$IceMax+($IceInc/2)" | bc -l)
     xbranch='icethick'
 elif [ "$xvar" = "F" ]; then
     var1='Firn Thickness'
-    xbins=5
-    xmin=50
-    xmax=150
+    xbins=$(( ($FirnMax-$FirnMin)/$FirnInc +1 ))
+    xmin=$(echo "scale=2;$FirnMin-($FirnInc/2)" | bc -l)
+    xmax=$(echo "scale=2;$FirnMax+($FirnInc/2)" | bc -l)
     xbranch='firndepth'
 elif [ "$xvar" = "S" ]; then
     var1='Station Depth'
-    xbins=5
-    xmin='-25'
-    xmax=225
+    xbins=$(( ($StDepthMax-$StDepthMin)/$StDepthInc +1 ))
+    xmin=$(echo "scale=2;$StDepthMin-(StDepthInc/2)" | bc -l)
+    xmax=$(echo "scale=2;$StDepthMax+(StDepthInc/2)" | bc -l)
     xbranch='station_depth'
 fi
 
 
 if [ "$yvar" = "A" ]; then
     var2='Attenuation Length'
-    ybins=6
-    ymin=450
-    ymax=1050
+    ybins=$(( ($AttenMax-$AttenMin)/$AttenInc +1 ))
+    ymin=$(echo "scale=2;$AttenMin-($AttenInc/2)" | bc -l)
+    ymax=$(echo "scale=2;$AttenMax+($AttenInc/2)" | bc -l)
     ybranch='atten_up'
 elif [ "$yvar" = "R" ]; then
     var2='Antenna Radius'
-    ybins=5
-    ymin='-0.5'
-    ymax='34.5'
+    ybins=$(( ($RadiusMax-$RadiusMin)/$RadiusInc +1 ))
+    ymin=$(echo "scale=2;$RadiusMin-($RadiusInc/2)" | bc -l)
+    ymax=$(echo "scale=2;$RadiusMax+($RadiusInc/2)" | bc -l)
     ybranch='st4_r'
 elif [ "$yvar" = "I" ]; then
     var2='Ice Thickness'
-    ybins=7
-    ymin=300
-    ymax=3100
+    ybins=$(( (IceMax-$IceMin)/$IceInc +1 ))
+    ymin=$(echo "scale=2;$IceMin-($IceInc/2)" | bc -l)
+    ymax=$(echo "scale=2;$IceMax+($IceInc/2)" | bc -l)
     ybranch='icethick'
 elif [ "$yvar" = "F" ]; then
     var2='Firn Thickness'
-    ybins=5
-    ymin=50
-    ymax=150
+    ybins=$(( ($FirnMax-$FirnMin)/$FirnInc +1 ))
+    ymin=$(echo "scale=2;$FirnMin-($FirnInc/2)" | bc -l)
+    ymax=$(echo "scale=2;$FirnMax+($FirnInc/2)" | bc -l)
     ybranch='firndepth'
 elif [ "$yvar" = "S" ]; then
     var2='Station Depth'
-    ybins=5
-    ymin='-25'
-    ymax=225
+    ybins=$(( ($StDepthMax-$StDepthMin)/$StDepthInc +1 ))
+    ymin=$(echo "scale=2;$StDepthMin-(StDepthInc/2)" | bc -l)
+    ymax=$(echo "scale=2;$StDepthMax+(StDepthInc/2)" | bc -l)
     ybranch='station_depth'
 fi
 
@@ -650,11 +690,11 @@ cd $shelfmc/outputs/${runName}_${xvar}_${yvar}
 
 #################################################################################################
 if ([ "$xvar" = "A" ] && [ "$yvar" = "R" ]) || ([ "$yvar" = "A" ] && [ "$xvar" = "R" ]); then
-for const1 in {500..2900..400}
+for ((const1=$IceMin;const1<=$IceMax;const1+=$IceInc))
 do
-    for const2 in {60..140..20}
+    for ((const2=$FirnMin;const2<=$FirnMax;const2+=$FirnInc))
     do
-	for const3 in {0..200..50}
+	for ((const3=$StDepthMin;const3<=$StDepthMax;const3+=$StDepthInc))
         do
 
 	    hadd Veff_${xvar}_${yvar}_I${const1}_F${const2}_S${const3}.root *c1${const1}_c2${const2}_c3${const3}.root
@@ -673,12 +713,11 @@ do
 done
 
 rm *Result*
-
-for const1 in {500..2900..400}
+for ((const1=$IceMin;const1<=$IceMax;const1+=$IceInc))
 do
-    for const2 in {60..140..20}
+    for ((const2=$FirnMin;const2<=$FirnMax;const2+=$FirnInc))
     do
-        for const3 in {0..200..50}
+        for ((const3=$StDepthMin;const3<=$StDepthMax;const3+=$StDepthInc))
         do
 	    root -b -l -q Veff_${xvar}_${yvar}_I${const1}_F${const2}_S${const3}.C
         done
@@ -686,11 +725,11 @@ do
 done
 ##################################################################################################
 elif ([ "$xvar" = "A" ] && [ "$yvar" = "I" ]) || ([ "$yvar" = "A" ] && [ "$xvar" = "I" ]); then
-for const1 in {3..31..7}
+for ((const1=$RadiusMin;const1<=$RadiusMax;const1+=$RadiusInc))
 do
-    for const2 in {60..140..20}
+    for ((const2=$FirnMin;const2<=$FirnMax;const2+=$FirnInc))
     do
-        for const3 in {0..200..50}
+        for ((const3=$StDepthMin;const3<=$StDepthMax;const3+=$StDepthInc))
         do
 
             hadd Veff_${xvar}_${yvar}_R${const1}_F${const2}_S${const3}.root *c1${const1}_c2${const2}_c3${const3}.root
@@ -710,11 +749,11 @@ done
 
 rm *Result*
 
-for const1 in {3..31..7}
+for ((const1=$RadiusMin;const1<=$RadiusMax;const1+=$RadiusInc))
 do
-    for const2 in {60..140..20}
+    for ((const2=$FirnMin;const2<=$FirnMax;const2+=$FirnInc))
     do
-        for const3 in {0..200..50}
+        for ((const3=$StDepthMin;const3<=$StDepthMax;const3+=$StDepthInc))
         do
             root -b -l -q Veff_${xvar}_${yvar}_R${const1}_F${const2}_S${const3}.C
         done
@@ -722,11 +761,11 @@ do
 done
 #####################################################################################################
 elif ([ "$xvar" = "A" ] && [ "$yvar" = "F" ]) || ([ "$yvar" = "A" ] && [ "$xvar" = "F" ]); then
-for const1 in {3..31..7}
+for ((const1=$RadiusMin;const1<=$RadiusMax;const1+=$RadiusInc))
 do
-    for const2 in {500..2900..400}
+    for ((const2=$IceMin;const2<=$IceMax;const2+=$IceInc))
     do
-        for const3 in {0..200..50}
+        for ((const3=$StDepthMin;const3<=$StDepthMax;const3+=$StDepthInc))
         do
 
             hadd Veff_${xvar}_${yvar}_R${const1}_I${const2}_S${const3}.root *c1${const1}_c2${const2}_c3${const3}.root
@@ -746,11 +785,11 @@ done
 
 rm *Result*
 
-for const1 in {3..31..7}
+for ((const1=$RadiusMin;const1<=$RadiusMax;const1+=$RadiusInc))
 do
-    for const2 in {500..2900..400}
+    for ((const2=$IceMin;const2<=$IceMax;const2+=$IceInc))
     do
-        for const3 in {0..200..50}
+        for ((const3=$StDepthMin;const3<=$StDepthMax;const3+=$StDepthInc))
         do
             root -b -l -q Veff_${xvar}_${yvar}_R${const1}_I${const2}_S${const3}.C
         done
@@ -758,11 +797,11 @@ do
 done
 ###################################################################################################################
 elif ([ "$xvar" = "A" ] && [ "$yvar" = "S" ]) || ([ "$yvar" = "A" ] && [ "$xvar" = "S" ]); then
-for const1 in {3..31..7}
+for ((const1=$RadiusMin;const1<=$RadiusMax;const1+=$RadiusInc))
 do
-    for const2 in {500..2900..400}
+    for ((const2=$IceMin;const2<=$IceMax;const2+=$IceInc))
     do
-        for const3 in {60..140..20}
+        for ((const3=$FirnMin;const3<=$FirnMax;const3+=$FirnInc))
         do
 
             hadd Veff_${xvar}_${yvar}_R${const1}_I${const2}_F${const3}.root *c1${const1}_c2${const2}_c3${const3}.root
@@ -782,11 +821,11 @@ done
 
 rm *Result*
 
-for const1 in {3..31..7}
+for ((const1=$RadiusMin;const1<=$RadiusMax;const1+=$RadiusInc))
 do
-    for const2 in {500..2900..400}
+    for ((const2=$IceMin;const2<=$IceMax;const2+=$IceInc))
     do
-        for const3 in {60..140..20}
+        for ((const3=$FirnMin;const3<=$FirnMax;const3+=$FirnInc))
         do
             root -b -l -q Veff_${xvar}_${yvar}_R${const1}_I${const2}_F${const3}.C
         done
@@ -794,12 +833,12 @@ do
 done
 #############################################################################################################################
 elif ([ "$xvar" = "R" ] && [ "$yvar" = "I" ]) || ([ "$yvar" = "R" ] && [ "$xvar" = "I" ]); then
-for const1 in {500..1000..100}
+for ((const1=$AttenMin;const1<=$AttenMax;const1+=$AttenInc))
 do
-    for const2 in {60..140..20}
+    for ((const2=$FirnMin;const2<=$FirnMax;const2+=$FirnInc))
     do
-        for const3 in {0..200..50}
-        do
+	for ((const3=$StDepthMin;const3<=$StDepthMax;const3+=$StDepthInc))
+	do
 
             hadd Veff_${xvar}_${yvar}_A${const1}_F${const2}_S${const3}.root *c1${const1}_c2${const2}_c3${const3}.root
 
@@ -818,11 +857,11 @@ done
 
 rm *Result*
 
-for const1 in {500..1000..100}
+for ((const1=$AttenMin;const1<=$AttenMax;const+=$AttenInc))
 do
-    for const2 in {60..140..20}
+    for ((const2=$FirnMin;const2<=$FirnMax;const2+=$FirnInc))
     do
-        for const3 in {0..200..50}
+        for ((const3=$StDepthMin;const3<=$StDepthMax;const3+=$StDepthInc))
         do
             root -b -l -q Veff_${xvar}_${yvar}_A${const1}_F${const2}_S${const3}.C
         done
@@ -830,11 +869,11 @@ do
 done
 ####################################################################################################################
 elif ([ "$xvar" = "R" ] && [ "$yvar" = "F" ]) || ([ "$yvar" = "R" ] && [ "$xvar" = "F" ]); then
-for const1 in {500..1000..100}
+for ((const1=$AttenMin;const1<=$AttenMax;const1+=$AttenInc))
 do
-    for const2 in {500..2900..400}
+    for ((const2=$IceMin;const2<=$IceMax;const2+=$IceInc))
     do
-        for const3 in {0..200..50}
+        for ((const3=$StDepthMin;const3<=$StDepthMax;const3+=$StDepthInc))
         do
 
             hadd Veff_${xvar}_${yvar}_A${const1}_I${const2}_S${const3}.root *c1${const1}_c2${const2}_c3${const3}.root
@@ -854,11 +893,11 @@ done
 
 rm *Result*
 
-for const1 in {500..1000..100}
+for ((const1=$AttenMin;const1<=$AttenMax;const1+=$AttenInc))
 do
-    for const2 in {500..2900..400}
+    for ((const2=$IceMin;const2<=$IceMax;const2+=$IceInc))
     do
-        for const3 in {0..200..50}
+        for ((const3=$StDepthMin;const3<=$StDepthMax;const3+=$StDepthInc))
         do
             root -b -l -q Veff_${xvar}_${yvar}_A${const1}_I${const2}_S${const3}.C
         done
@@ -866,11 +905,11 @@ do
 done
 ###############################################################################################################################
 elif ([ "$xvar" = "R" ] && [ "$yvar" = "S" ]) || ([ "$yvar" = "R" ] && [ "$xvar" = "S" ]); then
-for const1 in {500..1000..100}
+for ((const1=$AttenMin;const1<=$AttenMax;const1+=$AttenInc))
 do
-    for const2 in {500..2900..400}
+    for ((const2=$IceMin;const2<=$IceMax;const2+=$IceInc))
     do
-        for const3 in {60..140..20}
+        for ((const3=$FirnMin;const3<=$FirnMax;const3+=$FirnInc))
         do
 
             hadd Veff_${xvar}_${yvar}_A${const1}_I${const2}_F${const3}.root *c1${const1}_c2${const2}_c3${const3}.root
@@ -890,11 +929,11 @@ done
 
 rm *Result*
 
-for const1 in {500..1000..100}
+for ((const1=$AttenMin;const1<=$AttenMax;const1+=$AttenInc))
 do
-    for const2 in {500..2900..400}
+    for ((const2=$IceMin;const2<=$IceMax;const2+=$IceInc))
     do
-        for const3 in {60..140..20}
+        for ((const3=$FirnMin;const3<=$FirnMax;const3+=$FirnInc))
         do
             root -b -l -q Veff_${xvar}_${yvar}_A${const1}_I${const2}_F${const3}.C
         done
@@ -902,11 +941,11 @@ do
 done
 ###############################################################################################################################
 elif ([ "$xvar" = "I" ] && [ "$yvar" = "F" ]) || ([ "$yvar" = "I" ] && [ "$xvar" = "F" ]); then
-for const1 in {500..1000..100}
+for ((const1=$AttenMin;const1<=$AttenMax;const1+=$AttenInc))
 do
-    for const2 in {3..31..7}
+    for ((const2=$RadiusMin;const2<=$RadiusMax;const2+=$RadiusInc))
     do
-        for const3 in {0..200..50}
+        for ((const3=$StDepthMin;const3<=$StDepthMax;const3+=$StDepthInc))
         do
 
             hadd Veff_${xvar}_${yvar}_A${const1}_R${const2}_S${const3}.root *c1${const1}_c2${const2}_c3${const3}.root
@@ -926,11 +965,11 @@ done
 
 rm *Result*
 
-for const1 in {500..1000..100}
+for ((const1=$AttenMin;const1<=$AttenMax;const1+=$AttenInc))
 do
-    for const2 in {3..31..7}
+    for ((const2=$RadiusMin;const2<=$RadiusMax;const2+=$RadiusInc))
     do
-        for const3 in {0..200..50}
+        for ((const3=$StDepthMin;const3<=$StDepthMax;const3+=$StDepthInc))
         do
             root -b -l -q Veff_${xvar}_${yvar}_A${const1}_R${const2}_S${const3}.C
         done
@@ -938,11 +977,11 @@ do
 done
 #########################################################################################################################
 elif ([ "$xvar" = "I" ] && [ "$yvar" = "S" ]) || ([ "$yvar" = "I" ] && [ "$xvar" = "S" ]); then
-for const1 in {500..1000..100}
+for ((const1=$AttenMin;const1<=$AttenMax;const1+=$AttenInc))
 do
-    for const2 in {3..31..7}
+    for ((const2=$RadiusMin;const2<=$RadiusMax;const2+=$RadiusInc))
     do
-        for const3 in {60..140..20}
+        for ((const3=$FirnMin;const3<=$FirnMax;const3+=$FirnInc))
         do
 
             hadd Veff_${xvar}_${yvar}_A${const1}_R${const2}_F${const3}.root *c1${const1}_c2${const2}_c3${const3}.root
@@ -962,11 +1001,11 @@ done
 
 rm *Result*
 
-for const1 in {500..1000..100}
+for ((const1=$AttenMin;const1<=$AttenMax;const1+=$AttenInc))
 do
-    for const2 in {3..31..7}
+    for ((const2=$RadiusMin;const2<=$RadiusMax;const2+=$RadiusInc))
     do
-        for const3 in {60..140..20}
+        for ((const3=$FirnMin;const3<=$FirnMax;const3+=$FirnInc))
         do
             root -b -l -q Veff_${xvar}_${yvar}_A${const1}_R${const2}_F${const3}.C
         done
@@ -974,11 +1013,11 @@ do
 done
 #########################################################################################################################
 elif ([ "$xvar" = "F" ] && [ "$yvar" = "S" ]) || ([ "$yvar" = "F" ] && [ "$xvar" = "S" ]); then
-for const1 in {500..1000..100}
+for ((const1=$AttenMin;const1<=$AttenMax;const1+=$AttenInc))
 do
-    for const2 in {3..31..7}
+    for ((const2=$RadiusMin;const2<=$RadiusMax;const2+=$RadiusInc))
     do
-        for const3 in {500..2900..400}
+        for ((const3=$IceMin;const3<=$IceMax;const3+=$IceInc))
         do
 
             hadd Veff_${xvar}_${yvar}_A${const1}_R${const2}_I${const3}.root *c1${const1}_c2${const2}_c3${const3}.root
@@ -998,11 +1037,11 @@ done
 
 rm *Result*
 
-for const1 in {500..1000..100}
+for ((const1=$AttenMin;const1<=$AttenMax;const1+=$AttenInc))
 do
-    for const2 in {3..31..7}
+    for ((const2=$RadiusMin;const2<=$RadiusMax;const2+=$RadiusInc))
     do
-        for const3 in {500..2900..400}
+        for ((const3=$IceMin;const3<=$IceMax;const3+=$IceInc))
         do
             root -b -l -q Veff_${xvar}_${yvar}_A${const1}_R${const2}_I${const3}.C
         done
@@ -1010,6 +1049,7 @@ do
 done
 ###################################################################################################################
 fi
+
 
 rm *.root*
 rm *.C*
